@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCHOOL MANAGER PRO</title>
+
+<style>
+:root{
+--blue:#173f8a;
+--dark:#102957;
+--gold:#f5b82e;
+--bg:#f1f4f9;
+--green:#087443;
+--red:#d32f2f;
+}
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:var(--bg);
+color:#26344b;
+}
+header{
+background:var(--dark);
+color:white;
+padding:18px;
+text-align:center;
+}
+header h1{margin:0;font-size:24px}
+header p{margin:7px 0 0}
+.layout{display:flex;min-height:100vh}
+aside{
+width:245px;
+background:var(--dark);
+padding:15px;
+color:white;
+flex-shrink:0;
+}
+aside button{
+display:block;
+width:100%;
+margin:5px 0;
+text-align:left;
+background:transparent;
+color:white;
+padding:13px;
+border:0;
+border-radius:6px;
+cursor:pointer;
+}
+aside button:hover,aside button.active{
+background:var(--blue);
+}
+main{flex:1;padding:22px;min-width:0}
+.page{display:none}
+.page.active{display:block}
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+box-shadow:0 3px 12px #0001;
+}
+h2{color:var(--blue)}
+h3{color:var(--dark)}
+input,select,textarea{
+width:100%;
+padding:11px;
+margin:7px 0 15px;
+border:1px solid #ccd3df;
+border-radius:6px;
+font-size:15px;
+}
+label{font-weight:bold;font-size:14px}
+button{
+cursor:pointer;
+border:0;
+border-radius:6px;
+padding:11px 15px;
+font-weight:bold;
+}
+.primary{background:var(--blue);color:white}
+.success{background:var(--green);color:white}
+.danger{background:var(--red);color:white}
+.gold{background:var(--gold);color:#222}
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:15px;
+}
+.stat{
+background:white;
+padding:20px;
+border-radius:10px;
+border-left:5px solid var(--gold);
+}
+.stat h2{font-size:30px;margin:10px 0}
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+background:white;
+}
+th,td{
+padding:11px;
+border:1px solid #ddd;
+text-align:left;
+}
+th{background:var(--blue);color:white}
+.table-wrap{overflow-x:auto}
+.student-photo{
+width:110px;
+height:125px;
+object-fit:cover;
+border-radius:8px;
+border:2px solid var(--blue);
+}
+.profile{
+display:flex;
+gap:20px;
+align-items:center;
+flex-wrap:wrap;
+}
+.hidden{display:none!important}
+small{color:#777}
+@media(max-width:750px){
+.layout{display:block}
+aside{width:100%}
+aside button{display:inline-block;width:auto}
+main{padding:12px}
+}
+@media print{
+aside,header,.no-print{display:none!important}
+body{background:white}
+.card{box-shadow:none}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🏫 SCHOOL MANAGER PRO</h1>
+<p>Logiciel de gestion scolaire</p>
+</header>
+
+<div class="layout">
+
+<aside class="no-print">
+
+<button onclick="page('dashboard',this)">📊 Tableau de bord</button>
+<button onclick="page('eleves',this)">👨‍🎓 Élèves</button>
+<button onclick="page('enseignants',this)">👨‍🏫 Enseignants</button>
+<button onclick="page('classes',this)">🏫 Classes</button>
+<button onclick="page('matieres',this)">📚 Matières</button>
+<button onclick="page('notes',this)">📝 Résultats</button>
+<button onclick="page('consultation',this)">🔎 Consultation publique</button>
+<button onclick="page('presences',this)">📅 Présences</button>
+<button onclick="page('discipline',this)">⭐ Discipline</button>
+<button onclick="page('finances',this)">💰 Finances</button>
+<button onclick="page('utilisateurs',this)">🔐 Utilisateurs</button>
+<button onclick="page('rapports',this)">📈 Rapports</button>
+
+</aside>
+
+<main>
+
+<!-- DASHBOARD -->
+
+<section id="dashboard" class="page active">
+
+<h2>Tableau de bord</h2>
+
+<div class="grid">
+
+<div class="stat">
+Élèves
+<h2 id="statEleves">0</h2>
+</div>
+
+<div class="stat">
+Enseignants
+<h2 id="statEnseignants">0</h2>
+</div>
+
+<div class="stat">
+Classes
+<h2 id="statClasses">0</h2>
+</div>
+
+<div class="stat">
+Matières
+<h2 id="statMatieres">0</h2>
+</div>
+
+</div>
+
+<div class="card">
+<h3>Bienvenue dans SCHOOL MANAGER PRO</h3>
+<p>Gérez les activités de votre établissement scolaire depuis une seule plateforme.</p>
+<p>Année scolaire : 2026-2027</p>
+</div>
+
+</section>
+
+<!-- ELEVES -->
+
+<section id="eleves" class="page">
+
+<div class="card">
+<h2>Inscription des élèves</h2>
+
+<form id="formEleve">
+
+<label>Nom</label>
+<input id="eNom" required>
+
+<label>Postnom</label>
+<input id="ePostnom" required>
+
+<label>Prénom</label>
+<input id="ePrenom" required>
+
+<label>Matricule</label>
+<input id="eMatricule" required>
+
+<label>Sexe</label>
+<select id="eSexe">
+<option>Masculin</option>
+<option>Féminin</option>
+</select>
+
+<label>Date de naissance</label>
+<input type="date" id="eDate">
+
+<label>Classe</label>
+<select id="eClasse" class="classesOptions"></select>
+
+<label>Nom du parent</label>
+<input id="eParent">
+
+<label>Téléphone du parent</label>
+<input id="eTelephone">
+
+<label>Adresse</label>
+<input id="eAdresse">
+
+<label>Photo de l'élève</label>
+<input type="file" id="ePhoto" accept="image/*">
+
+<button class="success">Enregistrer l'élève</button>
+
+</form>
+</div>
+
+<div class="card">
+<h2>Liste des élèves</h2>
+<input id="filtreEleves" placeholder="Rechercher un élève..." oninput="afficherEleves()">
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Photo</th>
+<th>Matricule</th>
+<th>Nom complet</th>
+<th>Classe</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="tableEleves"></tbody>
+</table>
+</div>
+</div>
+
+</section>
+
+<!-- ENSEIGNANTS -->
+
+<section id="enseignants" class="page">
+
+<div class="card">
+<h2>Enregistrement des enseignants</h2>
+
+<form id="formEnseignant">
+
+<label>Nom complet</label>
+<input id="tNom" required>
+
+<label>Matricule enseignant</label>
+<input id="tMatricule" required>
+
+<label>Téléphone</label>
+<input id="tTelephone">
+
+<label>Matière enseignée</label>
+<select id="tMatiere" class="matieresOptions"></select>
+
+<label>Classe</label>
+<select id="tClasse" class="classesOptions"></select>
+
+<button class="success">Enregistrer</button>
+</form>
+</div>
+
+<div class="card">
+<h2>Liste des enseignants</h2>
+<table>
+<thead>
+<tr>
+<th>Matricule</th>
+<th>Nom</th>
+<th>Matière</th>
+<th>Classe</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="tableEnseignants"></tbody>
+</table>
+</div>
+
+</section>
+
+<!-- CLASSES -->
+
+<section id="classes" class="page">
+
+<div class="card">
+<h2>Gestion des classes</h2>
+
+<form id="formClasse">
+<label>Nom de la classe</label>
+<input id="cNom" placeholder="Exemple : 7ème A" required>
+
+<label>Section / Option</label>
+<input id="cOption" placeholder="Exemple : Scientifique">
+
+<button class="success">Ajouter la classe</button>
+</form>
+</div>
+
+<div class="card">
+<h3>Classes enregistrées</h3>
+<table>
+<thead><tr><th>Classe</th><th>Option</th><th>Action</th></tr></thead>
+<tbody id="tableClasses"></tbody>
+</table>
+</div>
+
+</section>
+
+<!-- MATIERES -->
+
+<section id="matieres" class="page">
+
+<div class="card">
+<h2>Gestion des matières</h2>
+
+<form id="formMatiere">
+<label>Nom de la matière</label>
+<input id="mNom" required>
+
+<label>Maximum de points</label>
+<input id="mMaximum" type="number" min="1" value="20" required>
+
+<label>Coefficient</label>
+<input id="mCoefficient" type="number" min="1" value="1">
+
+<button class="success">Ajouter la matière</button>
+</form>
+</div>
+
+<div class="card">
+<h3>Liste des matières</h3>
+<table>
+<thead>
+<tr><th>Matière</th><th>Maximum</th><th>Coefficient</th><th>Action</th></tr>
+</thead>
+<tbody id="tableMatieres"></tbody>
+</table>
+</div>
+
+</section>
+
+<!-- RESULTATS -->
+
+<section id="notes" class="page">
+
+<div class="card">
+<h2>Encodage des résultats</h2>
+
+<form id="formNote">
+
+<label>Élève</label>
+<select id="nEleve" required></select>
+
+<label>Matière</label>
+<select id="nMatiere" required></select>
+
+<label>Trimestre</label>
+<select id="nTrimestre">
+<option>Premier trimestre</option>
+<option>Deuxième trimestre</option>
+<option>Troisième trimestre</option>
+</select>
+
+<label>Type d'évaluation</label>
+<select id="nType">
+<option>Interrogation</option>
+<option>Travail pratique</option>
+<option>Examen</option>
+<option>Autre</option>
+</select>
+
+<label>Points obtenus</label>
+<input id="nPoints" type="number" min="0" required>
+
+<button class="success">Enregistrer les points</button>
+
+</form>
+</div>
+
+<div class="card">
+<h2>Résultats encodés</h2>
+<table>
+<thead>
+<tr>
+<th>Élève</th>
+<th>Matière</th>
+<th>Trimestre</th>
+<th>Évaluation</th>
+<th>Points</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="tableNotes"></tbody>
+</table>
+</div>
+
+</section>
+
+<!-- CONSULTATION -->
+
+<section id="consultation" class="page">
+
+<div class="card">
+
+<h2>🔎 Consultation des résultats scolaires</h2>
+
+<p>Entrez le nom ou le matricule de l'élève.</p>
+
+<input id="recherche" placeholder="Nom ou matricule..." oninput="chercherResultat()">
+
+<div id="profilEleve" class="hidden">
+
+<hr>
+
+<div class="profile">
+<img id="photoProfil" class="student-photo">
+
+<div>
+<h2 id="nomProfil"></h2>
+<p>Matricule : <b id="matriculeProfil"></b></p>
+<p>Classe : <b id="classeProfil"></b></p>
+</div>
+</div>
+
+<h3>Résultats scolaires</h3>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Matière</th>
+<th>Trimestre</th>
+<th>Points</th>
+</tr>
+</thead>
+<tbody id="resultatsProfil"></tbody>
+</table>
+</div>
+
+<h3>Synthèse</h3>
+<p>Total obtenu : <b id="totalProfil"></b></p>
+<p>Pourcentage : <b id="pourcentageProfil"></b></p>
+<p>Décision : <b id="decisionProfil"></b></p>
+
+<h3>Comportement</h3>
+<p id="comportementProfil"></p>
+
+<button class="primary no-print" onclick="window.print()">
+Imprimer le bulletin
+</button>
+
+</div>
+
+<p id="messageRecherche"></p>
+
+</div>
+</section>
+
+<!-- PRESENCES -->
+
+<section id="presences" class="page">
+
+<div class="card">
+<h2>Gestion des présences</h2>
+
+<form id="formPresence">
+
+<label>Élève</label>
+<select id="pEleve" required></select>
+
+<label>Date</label>
+<input type="date" id="pDate" required>
+
+<label>Situation</label>
+<select id="pStatut">
+<option>Présent</option>
+<option>Absent</option>
+<option>En retard</option>
+</select>
+
+<button class="success">Enregistrer</button>
+</form>
+</div>
+
+<div class="card">
+<h3>Historique des présences</h3>
+<table>
+<thead><tr><th>Élève</th><th>Date</th><th>Statut</th></tr></thead>
+<tbody id="tablePresences"></tbody>
+</table>
+</div>
+
+</section>
+
+<!-- DISCIPLINE -->
+
+<section id="discipline" class="page">
+
+<div class="card">
+<h2>Suivi disciplinaire</h2>
+
+<form id="formDiscipline">
+
+<label>Élève</label>
+<select id="dEleve" required></select>
+
+<label>Comportement</label>
+<select id="dComportement">
+<option>Excellent</option>
+<option>Très bien</option>
+<option>Bien</option>
+<option>Assez bien</option>
+<option>À améliorer</option>
+</select>
+
+<label>Observation</label>
+<textarea id="dObservation"></textarea>
+
+<button class="success">Enregistrer</button>
+</form>
+</div>
+
+<div class="card">
+<h3>Historique disciplinaire</h3>
+<table>
+<thead><tr><th>Élève</th><th>Comportement</th><th>Observation</th></tr></thead>
+<tbody id="tableDiscipline"></tbody>
+</table>
+</div>
+
+</section>
+
+<!-- FINANCES -->
+
+<section id="finances" class="page">
+
+<div class="card">
+<h2>Gestion des frais scolaires</h2>
+
+<form id="formFinance">
+
+<label>Élève</label>
+<select id="fEleve" required></select>
+
+<label>Motif du paiement</label>
+<input id="fMotif" placeholder="Frais scolaires, inscription..." required>
+
+<label>Montant total à payer (FC)</label>
+<input type="number" id="fTotal" min="0" required>
+
+<label>Montant payé (FC)</label>
+<input type="number" id="fPaye" min="0" required>
+
+<label>Date</label>
+<input type="date" id="fDate" required>
+
+<button class="success">Enregistrer le paiement</button>
+</form>
+</div>
+
+<div class="card">
+<h3>Historique financier</h3>
+<table>
+<thead>
+<tr>
+<th>Élève</th>
+<th>Motif</th>
+<th>Total</th>
+<th>Payé</th>
+<th>Solde</th>
+</tr>
+</thead>
+<tbody id="tableFinances"></tbody>
+</table>
+</div>
+
+</section>
+
+<!-- UTILISATEURS -->
+
+<section id="utilisateurs" class="page">
+
+<div class="card">
+<h2>Gestion des utilisateurs</h2>
+
+<form id="formUtilisateur">
+
+<label>Nom d'utilisateur</label>
+<input id="uNom" required>
+
+<label>Mot de passe</label>
+<input id="uMotdepasse" type="password" required>
+
+<label>Rôle</label>
+<select id="uRole">
+<option>Administrateur</option>
+<option>Préfet</option>
+<option>Enseignant</option>
+<option>Secrétaire</option>
+</select>
+
+<button class="success">Créer un utilisateur</button>
+
+</form>
+</div>
+
+<div class="card">
+<h3>Utilisateurs enregistrés</h3>
+<table>
+<thead><tr><th>Utilisateur</th><th>Rôle</th></tr></thead>
+<tbody id="tableUtilisateurs"></tbody>
+</table>
+<p><small>Cette version est une démonstration locale. Les mots de passe ne constituent pas une authentification sécurisée.</small></p>
+</div>
+
+</section>
+
+<!-- RAPPORTS -->
+
+<section id="rapports" class="page">
+
+<div class="card">
+<h2>Rapports scolaires</h2>
+
+<div class="grid">
+<div class="stat">
+Total élèves
+<h2 id="rapportEleves">0</h2>
+</div>
+<div class="stat">
+Total enseignants
+<h2 id="rapportEnseignants">0</h2>
+</div>
+<div class="stat">
+Total des paiements
+<h2 id="rapportPaiements">0 FC</h2>
+</div>
+</div>
+
+<br>
+
+<button class="primary" onclick="window.print()">
+Imprimer le rapport
+</button>
+
+<button class="success" onclick="exporterDonnees()">
+Exporter les données JSON
+</button>
+
+</div>
+
+</section>
+
+</main>
+</div>
+
+<script>
+
+// BASE DE DONNEES LOCALE
+
+let db={};
+
+[
+"eleves","enseignants","classes","matieres",
+"notes","presences","discipline","finances","utilisateurs"
+].forEach(k=>{
+db[k]=JSON.parse(localStorage.getItem("SMP_"+k)||"[]");
+});
+
+function save(){
+Object.keys(db).forEach(k=>{
+localStorage.setItem("SMP_"+k,JSON.stringify(db[k]));
+});
+actualiser();
+}
+
+function id(){
+return Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+}
+
+function safe(v){
+let d=document.createElement("div");
+d.textContent=String(v??"");
+return d.innerHTML;
+}
+
+function page(n,btn){
+document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+document.getElementById(n).classList.add("active");
+document.querySelectorAll("aside button").forEach(x=>x.classList.remove("active"));
+if(btn)btn.classList.add("active");
+actualiser();
+}
+
+// MENUS DYNAMIQUES
+
+function remplir(select,items,texte){
+let s=document.getElementById(select);
+if(!s)return;
+
+let ancienne=s.value;
+
+s.innerHTML='<option value="">Sélectionner</option>';
+
+items.forEach(x=>{
+let o=document.createElement("option");
+o.value=x.id;
+o.textContent=texte(x);
+s.appendChild(o);
+});
+
+if(items.some(x=>x.id===ancienne))s.value=ancienne;
+}
+
+function actualiserMenus(){
+
+document.querySelectorAll(".classesOptions").forEach(s=>{
+let v=s.value;
+s.innerHTML='<option value="">Sélectionner une classe</option>';
+db.classes.forEach(x=>{
+let o=document.createElement("option");
+o.value=x.id;
+o.textContent=x.nom;
+s.appendChild(o);
+});
+s.value=v;
+});
+
+document.querySelectorAll(".matieresOptions").forEach(s=>{
+let v=s.value;
+s.innerHTML='<option value="">Sélectionner</option>';
+db.matieres.forEach(x=>{
+let o=document.createElement("option");
+o.value=x.id;
+o.textContent=x.nom;
+s.appendChild(o);
+});
+s.value=v;
+});
+
+["nEleve","pEleve","dEleve","fEleve"].forEach(s=>
+remplir(s,db.eleves,e=>e.nom+" "+e.postnom+" "+e.prenom)
+);
+
+remplir("nMatiere",db.matieres,e=>e.nom);
+
+}
+
+// ELEVES
+
+document.getElementById("formEleve").onsubmit=async function(e){
+e.preventDefault();
+
+let photo="";
+let fichier=document.getElementById("ePhoto").files[0];
+
+if(fichier){
+if(!fichier.type.startsWith("image/"))return alert("Photo invalide.");
+photo=await lirePhoto(fichier);
+}
+
+let matricule=eMatricule.value.trim();
+
+if(db.eleves.some(x=>x.matricule.toLowerCase()===matricule.toLowerCase()))
+return alert("Matricule déjà utilisé.");
+
+db.eleves.push({
+id:id(),
+nom:eNom.value.trim(),
+postnom:ePostnom.value.trim(),
+prenom:ePrenom.value.trim(),
+matricule,
+sexe:eSexe.value,
+date:eDate.value,
+classe:eClasse.value,
+parent:eParent.value,
+telephone:eTelephone.value,
+adresse:eAdresse.value,
+photo
+});
+
+save();
+this.reset();
+alert("Élève enregistré !");
+};
+
+function lirePhoto(file){
+return new Promise(resolve=>{
+let r=new FileReader();
+r.onload=()=>resolve(r.result);
+r.readAsDataURL(file);
+});
+}
+
+function afficherEleves(){
+
+let q=(document.getElementById("filtreEleves")?.value||"").toLowerCase();
+
+tableEleves.innerHTML=db.eleves
+.filter(e=>(e.nom+" "+e.postnom+" "+e.prenom+" "+e.matricule).toLowerCase().includes(q))
+.map(e=>`
+<tr>
+<td>${e.photo?`<img src="${e.photo}" width="45">`:"-"}</td>
+<td>${safe(e.matricule)}</td>
+<td>${safe(e.nom+" "+e.postnom+" "+e.prenom)}</td>
+<td>${safe(nomClasse(e.classe))}</td>
+<td><button class="danger" onclick="supprimer('eleves','${e.id}')">Supprimer</button></td>
+</tr>`).join("");
+
+}
+
+// ENSEIGNANTS
+
+formEnseignant.onsubmit=function(e){
+e.preventDefault();
+
+if(db.enseignants.some(x=>x.matricule===tMatricule.value.trim()))
+return alert("Matricule déjà utilisé.");
+
+db.enseignants.push({
+id:id(),nom:tNom.value,
+matricule:tMatricule.value,
+telephone:tTelephone.value,
+matiere:tMatiere.value,
+classe:tClasse.value
+});
+
+save();this.reset();alert("Enseignant enregistré.");
+};
+
+function afficherEnseignants(){
+tableEnseignants.innerHTML=db.enseignants.map(x=>`
+<tr>
+<td>${safe(x.matricule)}</td>
+<td>${safe(x.nom)}</td>
+<td>${safe(nomMatiere(x.matiere))}</td>
+<td>${safe(nomClasse(x.classe))}</td>
+<td><button class="danger" onclick="supprimer('enseignants','${x.id}')">Supprimer</button></td>
+</tr>`).join("");
+}
+
+// CLASSES
+
+formClasse.onsubmit=function(e){
+e.preventDefault();
+
+db.classes.push({id:id(),nom:cNom.value,option:cOption.value});
+
+save();this.reset();
+};
+
+function afficherClasses(){
+tableClasses.innerHTML=db.classes.map(x=>`
+<tr>
+<td>${safe(x.nom)}</td>
+<td>${safe(x.option)}</td>
+<td><button class="danger" onclick="supprimer('classes','${x.id}')">Supprimer</button></td>
+</tr>`).join("");
+}
+
+// MATIERES
+
+formMatiere.onsubmit=function(e){
+e.preventDefault();
+
+db.matieres.push({
+id:id(),
+nom:mNom.value,
+maximum:Number(mMaximum.value),
+coefficient:Number(mCoefficient.value)
+});
+
+save();this.reset();
+};
+
+function afficherMatieres(){
+tableMatieres.innerHTML=db.matieres.map(x=>`
+<tr>
+<td>${safe(x.nom)}</td>
+<td>${x.maximum}</td>
+<td>${x.coefficient}</td>
+<td><button class="danger" onclick="supprimer('matieres','${x.id}')">Supprimer</button></td>
+</tr>`).join("");
+}
+
+// NOTES
+
+formNote.onsubmit=function(e){
+e.preventDefault();
+
+let eleve=db.eleves.find(x=>x.id===nEleve.value);
+let matiere=db.matieres.find(x=>x.id===nMatiere.value);
+
+if(!eleve||!matiere)return alert("Sélection invalide.");
+
+let points=Number(nPoints.value);
+
+if(points<0||points>matiere.maximum)
+return alert("Les points doivent être compris entre 0 et "+matiere.maximum);
+
+db.notes.push({
+id:id(),
+eleve:eleve.id,
+matiere:matiere.id,
+trimestre:nTrimestre.value,
+type:nType.value,
+points,
+maximum:matiere.maximum
+});
+
+save();this.reset();
+};
+
+function afficherNotes(){
+
+tableNotes.innerHTML=db.notes.map(x=>`
+<tr>
+<td>${safe(nomEleve(x.eleve))}</td>
+<td>${safe(nomMatiere(x.matiere))}</td>
+<td>${safe(x.trimestre)}</td>
+<td>${safe(x.type)}</td>
+<td>${x.points}/${x.maximum}</td>
+<td><button class="danger" onclick="supprimer('notes','${x.id}')">Supprimer</button></td>
+</tr>`).join("");
+
+}
+
+// CONSULTATION
+
+function chercherResultat(){
+
+let q=recherche.value.trim().toLowerCase();
+
+profilEleve.classList.add("hidden");
+messageRecherche.innerText="";
+
+if(!q)return;
+
+let e=db.eleves.find(x=>
+(x.nom+" "+x.postnom+" "+x.prenom).toLowerCase().includes(q)||
+x.matricule.toLowerCase()===q
+);
+
+if(!e){
+messageRecherche.innerText="Aucun élève trouvé.";
+return;
+}
+
+let notes=db.notes.filter(x=>x.eleve===e.id);
+
+profilEleve.classList.remove("hidden");
+
+photoProfil.src=e.photo||"";
+nomProfil.innerText=e.nom+" "+e.postnom+" "+e.prenom;
+matriculeProfil.innerText=e.matricule;
+classeProfil.innerText=nomClasse(e.classe);
+
+resultatsProfil.innerHTML=notes.map(x=>`
+<tr>
+<td>${safe(nomMatiere(x.matiere))}</td>
+<td>${safe(x.trimestre)}</td>
+<td>${x.points}/${x.maximum}</td>
+</tr>`).join("");
+
+let total=notes.reduce((a,x)=>a+x.points,0);
+let maximum=notes.reduce((a,x)=>a+x.maximum,0);
+let pourcentage=maximum?total/maximum*100:0;
+
+totalProfil.innerText=total+" / "+maximum;
+pourcentageProfil.innerText=pourcentage.toFixed(2)+" %";
+
+decisionProfil.innerText=maximum?
+(pourcentage>=50?"ADMIS":"ÉCHEC"):"Résultats non disponibles";
+
+let derniers=db.discipline.filter(x=>x.eleve===e.id);
+
+comportementProfil.innerText=derniers.length?
+derniers[derniers.length-1].comportement:
+"Non renseigné";
+
+}
+
+// PRESENCES
+
+formPresence.onsubmit=function(e){
+e.preventDefault();
+
+db.presences.push({
+id:id(),
+eleve:pEleve.value,
+date:pDate.value,
+statut:pStatut.value
+});
+
+save();this.reset();
+};
+
+function afficherPresences(){
+tablePresences.innerHTML=db.presences.map(x=>`
+<tr>
+<td>${safe(nomEleve(x.eleve))}</td>
+<td>${safe(x.date)}</td>
+<td>${safe(x.statut)}</td>
+</tr>`).join("");
+}
+
+// DISCIPLINE
+
+formDiscipline.onsubmit=function(e){
+e.preventDefault();
+
+db.discipline.push({
+id:id(),
+eleve:dEleve.value,
+comportement:dComportement.value,
+observation:dObservation.value
+});
+
+save();this.reset();
+};
+
+function afficherDiscipline(){
+tableDiscipline.innerHTML=db.discipline.map(x=>`
+<tr>
+<td>${safe(nomEleve(x.eleve))}</td>
+<td>${safe(x.comportement)}</td>
+<td>${safe(x.observation)}</td>
+</tr>`).join("");
+}
+
+// FINANCES
+
+formFinance.onsubmit=function(e){
+e.preventDefault();
+
+let total=Number(fTotal.value);
+let paye=Number(fPaye.value);
+
+if(total<0||paye<0||paye>total)
+return alert("Vérifiez les montants.");
+
+db.finances.push({
+id:id(),
+eleve:fEleve.value,
+motif:fMotif.value,
+total,paye,
+date:fDate.value
+});
+
+save();this.reset();
+};
+
+function afficherFinances(){
+tableFinances.innerHTML=db.finances.map(x=>`
+<tr>
+<td>${safe(nomEleve(x.eleve))}</td>
+<td>${safe(x.motif)}</td>
+<td>${x.total.toLocaleString()} FC</td>
+<td>${x.paye.toLocaleString()} FC</td>
+<td>${(x.total-x.paye).toLocaleString()} FC</td>
+</tr>`).join("");
+}
+
+// UTILISATEURS
+
+formUtilisateur.onsubmit=function(e){
+e.preventDefault();
+
+db.utilisateurs.push({
+id:id(),
+nom:uNom.value,
+motdepasse:uMotdepasse.value,
+role:uRole.value
+});
+
+save();this.reset();
+};
+
+function afficherUtilisateurs(){
+tableUtilisateurs.innerHTML=db.utilisateurs.map(x=>`
+<tr>
+<td>${safe(x.nom)}</td>
+<td>${safe(x.role)}</td>
+</tr>`).join("");
+}
+
+// OUTILS
+
+function nomEleve(i){
+let x=db.eleves.find(e=>e.id===i);
+return x?x.nom+" "+x.postnom+" "+x.prenom:"";
+}
+
+function nomClasse(i){
+return db.classes.find(x=>x.id===i)?.nom||"";
+}
+
+function nomMatiere(i){
+return db.matieres.find(x=>x.id===i)?.nom||"";
+}
+
+function supprimer(table,i){
+
+if(!confirm("Confirmer la suppression ?"))return;
+
+db[table]=db[table].filter(x=>x.id!==i);
+save();
+
+}
+
+function exporterDonnees(){
+
+let blob=new Blob([JSON.stringify(db,null,2)],{
+type:"application/json"
+});
+
+let a=document.createElement("a");
+a.href=URL.createObjectURL(blob);
+a.download="sauvegarde-school-manager.json";
+a.click();
+URL.revokeObjectURL(a.href);
+
+}
+
+// RAPPORTS
+
+function actualiser(){
+
+actualiserMenus();
+
+afficherEleves();
+afficherEnseignants();
+afficherClasses();
+afficherMatieres();
+afficherNotes();
+afficherPresences();
+afficherDiscipline();
+afficherFinances();
+afficherUtilisateurs();
+
+statEleves.innerText=db.eleves.length;
+statEnseignants.innerText=db.enseignants.length;
+statClasses.innerText=db.classes.length;
+statMatieres.innerText=db.matieres.length;
+
+rapportEleves.innerText=db.eleves.length;
+rapportEnseignants.innerText=db.enseignants.length;
+
+let somme=db.finances.reduce((a,x)=>a+x.paye,0);
+
+rapportPaiements.innerText=somme.toLocaleString()+" FC";
+
+}
+
+actualiser();
+
+</script>
+
+</body>
+</html>
